@@ -9,6 +9,8 @@ import {FormControl, FormGroup} from "@angular/forms";
 })
 export class AppComponent {
   public adding = false;
+  public editing = false;
+  public editingIndex: number = 0;
 
   public habitForm = new FormGroup({
     name: new FormControl(''),
@@ -32,7 +34,36 @@ export class AppComponent {
   ];
 
   public onSubmit() {
-    this.habits.push(this.habitForm.value as Habit);
+    const habit = this.habitForm.value as Habit;
+
+    if (this.editing) {
+      this.habits.splice(this.editingIndex, 1, habit);
+    } else {
+      this.habits.push(habit);
+    }
+
+    this.editing = false;
     this.adding = false;
+    this.exitForm();
+  }
+
+  public setEditForm(habit: Habit, index: number) {
+    this.habitForm.patchValue({
+      name: habit.name,
+      frequency: habit.frequency,
+      description: habit.description,
+    });
+    this.editing = true;
+    this.editingIndex = index;
+  }
+
+  public onDelete(index: number) {
+    this.habits.splice(index, 1);
+  }
+
+  exitForm() {
+    this.adding = false;
+    this.editing = false;
+    this.habitForm.reset();
   }
 }
