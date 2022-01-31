@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {Habit} from "../models";
+import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-root',
@@ -7,8 +8,14 @@ import {Habit} from "../models";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'habit-tracker';
   public adding = false;
+
+  public habitForm = new FormGroup({
+    name: new FormControl(''),
+    frequency: new FormControl(''),
+    description: new FormControl(''),
+  });
+
   public habits: Habit[] = [
     <Habit>{
       name: '15 Minute Walk',
@@ -23,5 +30,9 @@ export class AppComponent {
         'The weeds get so out of hand if they wait any longer, and I like how nice our home looks with a clean lawn.',
     },
   ];
-}
 
+  public onSubmit() {
+    this.habits.push(this.habitForm.value as Habit);
+    this.adding = false;
+  }
+}
